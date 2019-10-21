@@ -8,6 +8,8 @@
 /*----------------------------------------------------------------------------*/
 
 // ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -18,6 +20,15 @@ using namespace vex;
 competition Competition;
 
 // define your global instances of motors and other devices here
+controller Controller;
+brain Brain;
+motor driveMotorFL(PORT1, gearSetting::ratio18_1, true);
+motor driveMotorFR(PORT10, gearSetting::ratio18_1, true);
+motor driveMotorBL(PORT11, gearSetting::ratio18_1, true);
+motor driveMotorBR(PORT20, gearSetting::ratio18_1, true);
+
+
+
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -30,9 +41,6 @@ competition Competition;
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
-  // Initializing Robot Configuration. DO NOT REMOVE!
-  vexcodeInit();
-
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
@@ -66,14 +74,15 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
-    // This is the main execution loop for the user control program.
-    // Each time through the loop your program should update motor + servo
-    // values based on feedback from the joysticks.
+    double thrust = Controller.Axis3.position();
+    double rotate = Controller.Axis1.position();
 
-    // ........................................................................
-    // Insert user code here. This is where you use the joystick values to
-    // update your motors, etc.
-    // ........................................................................
+    driveMotorFL.spin(directionType::fwd, thrust + rotate, velocityUnits::pct);
+    driveMotorFR.spin(directionType::fwd, thrust - rotate, velocityUnits::pct);
+    driveMotorBL.spin(directionType::fwd, thrust + rotate, velocityUnits::pct);
+    driveMotorBR.spin(directionType::fwd, thrust - rotate, velocityUnits::pct);
+
+    
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
