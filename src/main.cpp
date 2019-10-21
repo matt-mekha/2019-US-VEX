@@ -22,10 +22,12 @@ competition Competition;
 // define your global instances of motors and other devices here
 controller Controller;
 brain Brain;
-motor driveMotorFL(PORT1, gearSetting::ratio18_1, true);
+motor driveMotorFL(PORT1, gearSetting::ratio18_1, false);
 motor driveMotorFR(PORT10, gearSetting::ratio18_1, true);
-motor driveMotorBL(PORT11, gearSetting::ratio18_1, true);
+motor driveMotorBL(PORT11, gearSetting::ratio18_1, false);
 motor driveMotorBR(PORT20, gearSetting::ratio18_1, true);
+motor intakeMotorL(PORT2, gearSetting::ratio18_1, false); // TODO real port
+motor intakeMotorR(PORT3, gearSetting::ratio18_1, true); // TODO real port
 
 
 
@@ -76,13 +78,14 @@ void usercontrol(void) {
   while (1) {
     double thrust = Controller.Axis3.position();
     double rotate = Controller.Axis1.position();
-
     driveMotorFL.spin(directionType::fwd, thrust + rotate, velocityUnits::pct);
     driveMotorFR.spin(directionType::fwd, thrust - rotate, velocityUnits::pct);
     driveMotorBL.spin(directionType::fwd, thrust + rotate, velocityUnits::pct);
     driveMotorBR.spin(directionType::fwd, thrust - rotate, velocityUnits::pct);
 
-    
+    int intakeSpeed = (Controller.ButtonR1.pressing()) ? 0 : 1;
+    intakeMotorL.spin(directionType::fwd, intakeSpeed, velocityUnits::pct);
+    intakeMotorR.spin(directionType::fwd, intakeSpeed, velocityUnits::pct);
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
