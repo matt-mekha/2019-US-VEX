@@ -29,7 +29,7 @@ motor driveMotorBR(PORT20, gearSetting::ratio18_1, true);
 motor intakeMotorL(PORT2, gearSetting::ratio18_1, false); // TODO real port
 motor intakeMotorR(PORT3, gearSetting::ratio18_1, true); // TODO real port
 
-
+const int intakeSpeed = 100;
 
 
 /*---------------------------------------------------------------------------*/
@@ -83,9 +83,9 @@ void usercontrol(void) {
     driveMotorBL.spin(directionType::fwd, thrust + rotate, velocityUnits::pct);
     driveMotorBR.spin(directionType::fwd, thrust - rotate, velocityUnits::pct);
 
-    int intakeSpeed = (Controller.ButtonR1.pressing()) ? 0 : 1;
-    intakeMotorL.spin(directionType::fwd, intakeSpeed, velocityUnits::pct);
-    intakeMotorR.spin(directionType::fwd, intakeSpeed, velocityUnits::pct);
+    int intake_speed = (Controller.ButtonR1.pressing()) ? 0 : intakeSpeed;
+    intakeMotorL.spin(directionType::fwd, intake_speed, velocityUnits::pct);
+    intakeMotorR.spin(directionType::fwd, intake_speed, velocityUnits::pct);
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
